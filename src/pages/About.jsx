@@ -3,6 +3,7 @@ import Card from "../components/UI/Card";
 import Badge from "../components/UI/Badge";
 import { MapPin, Mail } from "lucide-react";
 import { fetchVisionaries } from "../services/api";
+import AboutHero from "../img/IMG-20260817-WA0009.jpg";
 
 const About = () => {
   const [visionaries, setVisionaries] = React.useState([]);
@@ -23,13 +24,13 @@ const About = () => {
       {/* Hero Section */}
       <div className="relative h-[50vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-black/50 z-10" />
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?q=80&w=1920&auto=format&fit=crop')] bg-cover bg-center" />
+        <img src={AboutHero} alt="African safari landscape" className="absolute inset-0 h-full w-full object-cover" />
         <div className="container relative z-20 text-center text-white">
           <Badge variant="secondary" className="mb-4 backdrop-blur-md bg-white/20 text-white border-white/30">
             Our Story
           </Badge>
           <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter font-heading">
-            The Makolo <span className="text-primary italic">Heritage</span>
+            The African Green <span className="text-primary italic">Story</span>
           </h1>
         </div>
       </div>
@@ -48,7 +49,7 @@ const About = () => {
             </div>
 
             <p className="text-gray-600 text-lg leading-relaxed font-medium">
-              At Makolo Safari, we are dedicated to crafting unforgettable
+              At African Green Adventures, we are dedicated to crafting unforgettable
               African adventures. Founded with a passion for the wild, our goal
               is to connect you with the continent&apos;s stunning landscapes,
               diverse wildlife, and rich cultures.
@@ -175,7 +176,8 @@ const About = () => {
                   <p className="font-black uppercase tracking-widest text-xs opacity-60">
                     Email
                   </p>
-                  <p className="text-lg font-bold">makoloafrikaadventures@mail.com</p>
+                  <p className="text-lg font-bold">dorice@africangenerationadventures.com</p>
+                  <p className="text-lg font-bold">jastin@africangenerationadventures.com</p>
                 </div>
               </div>
             </div>

@@ -13,9 +13,9 @@ const Terms = () => {
           <h2 className="text-xl font-black text-gray-900 uppercase">3. Traveler Responsibility</h2>
           <p>Travelers are responsible for valid passports, visas, and any required vaccinations. Please verify entry requirements before booking.</p>
           <h2 className="text-xl font-black text-gray-900 uppercase">4. Liability</h2>
-          <p>Makolo Adventure Tours acts as an organizer of travel services. We are not liable for events beyond our reasonable control including weather, flight delays, or force majeure.</p>
+          <p>African Green Adventures acts as an organizer of travel services. We are not liable for events beyond our reasonable control including weather, flight delays, or force majeure.</p>
           <h2 className="text-xl font-black text-gray-900 uppercase">5. Contact</h2>
-          <p>Questions? Email us at <span className="text-primary font-bold">makoloafrikaadventures@mail.com</span>.</p>
+          <p>Questions? Email us at <span className="text-primary font-bold">dorice@africangenerationadventures.com</span> or <span className="text-primary font-bold">jastin@africangenerationadventures.com</span>.</p>
         </div>
       </div>
     </div>

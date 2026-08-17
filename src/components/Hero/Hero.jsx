@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Button from "../UI/Button";
-import MainVideo from "../../assets/video/main.mp4";
+import HeroImage from "../../img/IMG-20260817-WA0006.jpg";
 
 const Hero = () => {
   const [priceValue, setPriceValue] = React.useState(1000);
@@ -19,17 +19,9 @@ const Hero = () => {
       {/* Background Overlay */}
       <div className="absolute inset-0 bg-black/40 z-10" />
 
-      {/* Cinematic Background Video */}
+      {/* Safari background */}
       <div className="absolute inset-0">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover"
-        >
-          <source src={MainVideo} type="video/mp4" />
-        </video>
+        <img src={HeroImage} alt="Zebra on the Tanzanian savannah" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/50" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
       </div>

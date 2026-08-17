@@ -12,7 +12,7 @@ import {
     FaQuoteLeft,
     FaEnvelopeOpenText,
 } from "react-icons/fa";
-import Logo from "../../assets/logo.jpg";
+import Logo from "../../img/logo.jpg";
 
 const AdminSidebar = ({ activeTab, setActiveTab, handleLogout }) => {
     const menuItems = [
@@ -39,7 +39,7 @@ const AdminSidebar = ({ activeTab, setActiveTab, handleLogout }) => {
                 />
                 <div>
                     <h2 className="font-black text-lg font-heading uppercase tracking-tighter">
-                        Makolo
+                        African Green
                     </h2>
                     <p className="text-primary text-[10px] font-black uppercase tracking-widest">
                         Admin Portal

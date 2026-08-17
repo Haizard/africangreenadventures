@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /login
 
-Sitemap: https://makoloafrika.com/sitemap.xml
+Sitemap: https://africangreenadventures.com/sitemap.xml

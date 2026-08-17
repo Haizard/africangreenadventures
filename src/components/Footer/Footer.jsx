@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-import FooterLogo from "../../assets/logo.jpg";
+import FooterLogo from "../../img/logo.jpg";
 import {
-  FaInstagram,
-  FaTripadvisor,
-  FaLinkedin,
   FaEnvelope,
   FaMobileAlt,
   FaShieldAlt,
@@ -70,15 +67,15 @@ const Footer = () => {
             <div className="flex items-center gap-4">
               <img
                 src={FooterLogo}
-                alt="Makolo Logo"
+                alt="African Green Adventures logo"
                 className="h-14 w-14 rounded-full object-cover ring-2 ring-primary/30"
               />
               <div>
                 <p className="font-black text-xl font-heading uppercase tracking-tight">
-                  Makolo
+                  African Green
                 </p>
                 <p className="text-primary text-xs font-black uppercase tracking-widest">
-                  Adventure Tours
+                  Adventures
                 </p>
               </div>
             </div>
@@ -89,11 +86,11 @@ const Footer = () => {
             </p>
             <div className="space-y-3">
               <a
-                href="mailto:makoloafrikaadventures@mail.com"
+                href="mailto:dorice@africangenerationadventures.com"
                 className="flex items-center gap-3 text-gray-400 hover:text-primary transition-colors text-sm font-bold"
               >
                 <FaEnvelope className="text-primary" />
-                makoloafrikaadventures@mail.com
+                dorice@africangenerationadventures.com
               </a>
               <a
                 href="tel:+255710887798"
@@ -103,30 +100,13 @@ const Footer = () => {
                 +255 710 887 798
               </a>
             </div>
-            <div className="flex items-center gap-4 pt-2">
+            <div className="pt-2">
               <a
-                href="https://www.instagram.com/makoloafrika"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:text-primary hover:border-primary/40 transition-all"
+                href="mailto:jastin@africangenerationadventures.com"
+                className="flex items-center gap-3 text-gray-400 hover:text-primary transition-colors text-sm font-bold"
               >
-                <FaInstagram />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/makoloadventure-safaris-666a13322"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:text-primary hover:border-primary/40 transition-all"
-              >
-                <FaLinkedin />
-              </a>
-              <a
-                href="https://www.tripadvisor.co.uk/Profile/makolosafari"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:text-primary hover:border-primary/40 transition-all"
-              >
-                <FaTripadvisor />
+                <FaEnvelope className="text-primary" />
+                jastin@africangenerationadventures.com
               </a>
             </div>
           </div>
@@ -197,7 +177,7 @@ const Footer = () => {
       <div className="border-t border-white/5">
         <div className="container py-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-600 text-xs font-bold">
-            © 2024 Makolo Adventure Tours. All rights reserved.
+            © 2026 African Green Adventures. All rights reserved.
           </p>
           <Link
             to="/login"

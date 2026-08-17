@@ -74,7 +74,7 @@ export const generateDailyBlog = async (req, res) => {
         const categoryList = blogCats.length > 0 ? blogCats.map(c => c.name).join(' | ') : "Safari News | Trekking Tips | Cultural Insights";
 
         const systemInstruction = `
-            Act as a Senior Tanzanian Travel Journalist and Luxury Safari Architect for "Makolo Adventure Tours". 
+            Act as a Senior Tanzanian Travel Journalist and Luxury Safari Architect for "African Green Adventures".
             Your goal is to write a weekly "Expert Insight" blog that feels handcrafted, authoritative, and deeply knowledgeable. Avoid generic AI phrasing.
 
             Internal Linking (CRITICAL):
@@ -163,7 +163,7 @@ export const generateDailyBlog = async (req, res) => {
             content: blogData.content,
             category: blogData.category,
             image: imageUrl,
-            author: "Makolo AI Expert"
+            author: "African Green AI Expert"
         });
 
         await newBlog.save();

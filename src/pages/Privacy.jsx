@@ -14,7 +14,7 @@ const Privacy = () => {
           <h2 className="text-xl font-black text-gray-900 uppercase">3. Data Security</h2>
           <p>We take reasonable measures to protect your data. Sensitive payment details, when supported in the future, will be handled by certified payment processors.</p>
           <h2 className="text-xl font-black text-gray-900 uppercase">4. Contact</h2>
-          <p>Questions about this policy? Email us at <span className="text-primary font-bold">makoloafrikaadventures@mail.com</span>.</p>
+          <p>Questions about this policy? Email us at <span className="text-primary font-bold">dorice@africangenerationadventures.com</span> or <span className="text-primary font-bold">jastin@africangenerationadventures.com</span>.</p>
         </div>
       </div>
     </div>

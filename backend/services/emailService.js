@@ -27,7 +27,7 @@ export const sendBookingEmail = async (booking) => {
     const html = `
     <h2>Booking Request Received — ${booking.bookingRef}</h2>
     <p>Hi ${booking.name},</p>
-    <p>Thank you for booking with Makolo Adventure Tours. Here are your details:</p>
+    <p>Thank you for booking with African Green Adventures. Here are your details:</p>
     <ul>
       <li>Package: ${booking.packageTour}</li>
       <li>Travel Date: ${new Date(booking.travelDate).toLocaleDateString()}</li>

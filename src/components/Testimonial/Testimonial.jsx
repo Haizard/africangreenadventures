@@ -3,7 +3,7 @@ import Slider from "react-slick";
 import { fetchTestimonials } from "../../services/api";
 
 const fallback = [
-  { _id: "1", name: "Christopher Reid", role: "Adventure Traveler", rating: 5, text: "My safari experience with Makolo was truly unforgettable. From the stunning landscapes to the incredible wildlife, everything was perfectly organized and exceeded my expectations." },
+  { _id: "1", name: "Christopher Reid", role: "Adventure Traveler", rating: 5, text: "My safari experience with African Green Adventures was truly unforgettable. From the stunning landscapes to the incredible wildlife, everything was perfectly organized and exceeded my expectations." },
   { _id: "2", name: "Maria William", role: "Nature Enthusiast", rating: 5, text: "An absolutely amazing adventure! The guides were knowledgeable, the accommodations were top-notch, and the wildlife encounters were spectacular." },
   { _id: "3", name: "Winston Clarke", role: "Repeat Client", rating: 5, text: "The attention to detail and personalized service made our trip unforgettable." },
 ];
