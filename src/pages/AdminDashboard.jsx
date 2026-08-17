@@ -1,0 +1,1999 @@
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import {
+  fetchTours,
+  createTour,
+  updateTour,
+  deleteTour,
+  fetchGallery,
+  createGallery,
+  deleteGallery,
+  fetchBookings,
+  deleteBooking,
+  updateBookingStatus,
+  fetchBlogs,
+  createBlog,
+  updateBlog,
+  deleteBlog,
+  generateAiBlog,
+  fetchInquiries,
+  deleteInquiry,
+  fetchTaxonomies,
+  createTaxonomy,
+  deleteTaxonomy,
+  fetchVisionaries,
+  createVisionary,
+  updateVisionary,
+  deleteVisionary,
+  fetchDestinations,
+  createDestination,
+  updateDestination,
+  deleteDestination,
+  fetchTestimonials,
+  createTestimonial,
+  deleteTestimonial,
+  fetchNewsletter,
+  deleteNewsletter,
+} from "../services/api";
+import { useNavigate } from "react-router-dom";
+
+import Button from "../components/UI/Button";
+import Card from "../components/UI/Card";
+import Badge from "../components/UI/Badge";
+import AdminSidebar from "../components/Admin/AdminSidebar";
+import ImageUpload from "../components/Admin/ImageUpload";
+
+const AdminDashboard = () => {
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("packages");
+  const [tours, setTours] = useState([]);
+  const [gallery, setGallery] = useState([]);
+  const [bookings, setBookings] = useState([]);
+  const [blogs, setBlogs] = useState([]);
+  const [inquiries, setInquiries] = useState([]);
+  const [taxonomies, setTaxonomies] = useState([]);
+  const [visionaries, setVisionaries] = useState([]);
+  const [destinations, setDestinations] = useState([]);
+  const [testimonials, setTestimonials] = useState([]);
+  const [newsletter, setNewsletter] = useState([]);
+
+  // Auth Check
+  useEffect(() => {
+    const auth = localStorage.getItem("adminToken");
+    if (!auth) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("adminToken");
+    navigate("/login");
+  };
+
+  // Form States
+  const [tourFormData, setTourFormData] = useState({
+    title: "",
+    description: "",
+    price: "",
+    image: "",
+    location: "",
+    author: "Admin",
+    date: "",
+    duration: "",
+    maxGroupSize: "",
+    tourType: "Safari",
+    category: "Standard",
+    inclusions: "",
+    exclusions: "",
+    itinerary: [{ day: 1, events: "" }],
+    isGroupTour: false,
+    maxCapacity: 12,
+    currentBookings: 0,
+    launchDate: "",
+  });
+
+  const [blogFormData, setBlogFormData] = useState({
+    title: "",
+    content: "",
+    image: "",
+    category: "Travel Tips",
+    author: "Admin",
+  });
+
+  const [galleryFormData, setGalleryFormData] = useState({
+    img: "",
+    location: "",
+    caption: "",
+  });
+  const [taxFormData, setTaxFormData] = useState({
+    name: "",
+    type: "tourType",
+  });
+
+  const [visionaryFormData, setVisionaryFormData] = useState({
+    name: "",
+    duty: "",
+    image: "",
+  });
+
+  const [destinationFormData, setDestinationFormData] = useState({
+    name: "",
+    slug: "",
+    heroImage: "",
+    shortIntro: "",
+    description: "",
+    bestTimeToVisit: "",
+    location: "",
+    highlights: "",
+    gallery: [],
+    wildlifeCalendar: "",
+  });
+
+  const [testimonialFormData, setTestimonialFormData] = useState({
+    name: "",
+    role: "",
+    text: "",
+    rating: 5,
+    image: "",
+    verified: true,
+  });
+
+  const [selectedInquiry, setSelectedInquiry] = useState(null);
+
+  const [editingTourId, setEditingTourId] = useState(null);
+  const [editingBlogId, setEditingBlogId] = useState(null);
+  const [editingVisionaryId, setEditingVisionaryId] = useState(null);
+  const [editingDestinationId, setEditingDestinationId] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    loadTours();
+    loadGallery();
+    loadBookings();
+    loadBlogs();
+    loadInquiries();
+    loadTaxonomies();
+    loadVisionaries();
+    loadDestinations();
+    loadTestimonials();
+    loadNewsletter();
+  }, []);
+
+  const loadTours = async () => {
+    try {
+      const res = await fetchTours();
+      setTours(res.data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const loadGallery = async () => {
+    try {
+      const res = await fetchGallery();
+      setGallery(res.data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const loadBookings = async () => {
+    try {
+      const res = await fetchBookings();
+      setBookings(res.data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const loadBlogs = async () => {
+    try {
+      const res = await fetchBlogs();
+      setBlogs(res.data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const loadInquiries = async () => {
+    try {
+      const res = await fetchInquiries();
+      setInquiries(res.data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const loadTaxonomies = async () => {
+    try {
+      const res = await fetchTaxonomies();
+      setTaxonomies(res.data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const loadVisionaries = async () => {
+    try {
+      const res = await fetchVisionaries();
+      setVisionaries(res.data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const loadDestinations = async () => {
+    try {
+      const res = await fetchDestinations();
+      setDestinations(res.data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const loadTestimonials = async () => {
+    try {
+      const res = await fetchTestimonials();
+      setTestimonials(res.data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const loadNewsletter = async () => {
+    try {
+      const res = await fetchNewsletter();
+      setNewsletter(res.data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleTourInputChange = (e) =>
+    setTourFormData({ ...tourFormData, [e.target.name]: e.target.value });
+  const handleBlogInputChange = (e) =>
+    setBlogFormData({ ...blogFormData, [e.target.name]: e.target.value });
+  const handleGalleryInputChange = (e) =>
+    setGalleryFormData({ ...galleryFormData, [e.target.name]: e.target.value });
+  const handleVisionaryInputChange = (e) =>
+    setVisionaryFormData({ ...visionaryFormData, [e.target.name]: e.target.value });
+  const handleDestinationInputChange = (e) =>
+    setDestinationFormData({ ...destinationFormData, [e.target.name]: e.target.value });
+  const handleTestimonialInputChange = (e) =>
+    setTestimonialFormData({ ...testimonialFormData, [e.target.name]: e.target.value });
+
+  // Tour Submit
+  const handleTourSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const processed = {
+      ...tourFormData,
+      price: Number(tourFormData.price),
+      inclusions: tourFormData.inclusions.split("\n").filter((i) => i.trim()),
+      exclusions: tourFormData.exclusions.split("\n").filter((i) => i.trim()),
+      itinerary: tourFormData.itinerary
+        .map((item) => ({
+          day: item.day,
+          events: item.events.split("\n").filter((e) => e.trim()),
+        }))
+        .filter((item) => item.events.length > 0),
+    };
+    try {
+      if (editingTourId) await updateTour(editingTourId, processed);
+      else await createTour(processed);
+      setTourFormData({
+        ...tourFormData,
+        title: "",
+        description: "",
+        price: "",
+        image: "",
+        location: "",
+        inclusions: "",
+        exclusions: "",
+        itinerary: [{ day: 1, events: "" }],
+      });
+      setEditingTourId(null);
+      loadTours();
+      alert("Tour saved!");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Blog Submit
+  const handleBlogSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      if (editingBlogId) await updateBlog(editingBlogId, blogFormData);
+      else await createBlog(blogFormData);
+      setBlogFormData({
+        title: "",
+        content: "",
+        image: "",
+        category: "Travel Tips",
+        author: "Admin",
+      });
+      setEditingBlogId(null);
+      loadBlogs();
+      alert("Blog saved!");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Gallery Submit
+  const handleGallerySubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await createGallery(galleryFormData);
+      setGalleryFormData({ img: "", location: "", caption: "" });
+      loadGallery();
+      alert("Photo added to gallery!");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Visionary Submit
+  const handleVisionarySubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      if (editingVisionaryId)
+        await updateVisionary(editingVisionaryId, visionaryFormData);
+      else await createVisionary(visionaryFormData);
+      setVisionaryFormData({ name: "", duty: "", image: "" });
+      setEditingVisionaryId(null);
+      loadVisionaries();
+      alert("Visionary saved!");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteVisionary = async (id) => {
+    if (window.confirm("Delete this team member?")) {
+      try {
+        await deleteVisionary(id);
+        loadVisionaries();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
+
+  // Destination Submit
+  const handleDestinationSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const processed = {
+      ...destinationFormData,
+      highlights: destinationFormData.highlights
+        .split("\n")
+        .map((h) => h.trim())
+        .filter(Boolean),
+      gallery: (destinationFormData.gallery || [])
+        .map((g) => String(g).trim())
+        .filter(Boolean),
+      wildlifeCalendar: destinationFormData.wildlifeCalendar
+        .split("\n")
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .map((line) => {
+          const [month, ...rest] = line.split(":");
+          return { month: (month || "").trim(), event: rest.join(":").trim() };
+        })
+        .filter((c) => c.month && c.event),
+    };
+    try {
+      if (editingDestinationId)
+        await updateDestination(editingDestinationId, processed);
+      else await createDestination(processed);
+      setDestinationFormData({
+        name: "",
+        slug: "",
+        heroImage: "",
+        shortIntro: "",
+        description: "",
+        bestTimeToVisit: "",
+        location: "",
+        highlights: "",
+        gallery: [],
+        wildlifeCalendar: "",
+      });
+      setEditingDestinationId(null);
+      loadDestinations();
+      alert("Destination saved!");
+    } catch (e) {
+      console.error(e);
+      alert(e.response?.data?.message || "Failed to save destination");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Testimonial Submit
+  const handleTestimonialSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await createTestimonial({
+        ...testimonialFormData,
+        rating: Number(testimonialFormData.rating),
+      });
+      setTestimonialFormData({
+        name: "",
+        role: "",
+        text: "",
+        rating: 5,
+        image: "",
+        verified: true,
+      });
+      loadTestimonials();
+      alert("Testimonial added!");
+    } catch (e) {
+      console.error(e);
+      alert(e.response?.data?.message || "Failed to add testimonial");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEditVisionary = (visionary) => {
+    setVisionaryFormData({
+      name: visionary.name,
+      duty: visionary.duty,
+      image: visionary.image,
+    });
+    setEditingVisionaryId(visionary._id);
+    setActiveTab("visionaries");
+    window.scrollTo(0, 0);
+  };
+
+  // Taxonomy Submit
+  const handleTaxSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await createTaxonomy(taxFormData);
+      setTaxFormData({ name: "", type: "tourType" });
+      loadTaxonomies();
+      alert("Filter created!");
+    } catch (e) {
+      console.error(e);
+      alert(e.response?.data?.message || "Failed to create filter");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Form logic to ensure initial values for selects match taxonomies
+  useEffect(() => {
+    if (taxonomies.length > 0) {
+      const firstType =
+        taxonomies.find((t) => t.type === "tourType")?.name || "Safari";
+      const firstCat =
+        taxonomies.find((t) => t.type === "tourCategory")?.name || "Luxury";
+      const firstBlogCat =
+        taxonomies.find((t) => t.type === "blogCategory")?.name ||
+        "Travel Tips";
+
+      setTourFormData((prev) => ({
+        ...prev,
+        tourType: firstType,
+        category: firstCat,
+      }));
+      setBlogFormData((prev) => ({ ...prev, category: firstBlogCat }));
+    }
+  }, [taxonomies]);
+
+  return (
+    <div className="min-h-screen bg-slate-50 flex">
+      {/* Sidebar */}
+      <AdminSidebar
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        handleLogout={handleLogout}
+      />
+
+      {/* Main Content Area */}
+      <div className="flex-1 ml-64 min-h-screen">
+        {/* Top bar (for spacing/branding) */}
+        <div className="h-16 bg-white border-b border-slate-200 sticky top-0 z-40 flex items-center justify-between px-12">
+          <h2 className="text-xl font-black text-slate-900 uppercase tracking-tighter italic">
+            Control <span className="text-primary italic">Center</span>
+          </h2>
+          <div className="flex items-center gap-4">
+            <Badge variant="primary">Online</Badge>
+          </div>
+        </div>
+
+        <div className="p-12">
+          {/* Header information removed in favor of sidebar context */}
+          <div className="mb-12">
+            <h1 className="text-4xl font-black text-slate-900 uppercase tracking-tighter mb-2">
+              {activeTab} Management
+            </h1>
+            <p className="text-slate-500 font-medium">
+              Manage your {activeTab} inventory and resources from here.
+            </p>
+          </div>
+
+          {/* Packages Section */}
+          {activeTab === "packages" && (
+            <div className="animate-fade-in">
+              <div className="flex justify-between items-center mb-10">
+                <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">
+                  Tour Inventory
+                </h2>
+                <Badge variant="primary">{tours.length} Active Packages</Badge>
+              </div>
+
+              <Card className="p-8 mb-12 border-none shadow-xl">
+                <h3 className="text-xl font-bold mb-8 flex items-center gap-2">
+                  <span className="w-2 h-8 bg-primary rounded-full" />
+                  {editingTourId
+                    ? "Update Existing Package"
+                    : "Create New Adventure"}
+                </h3>
+                <form onSubmit={handleTourSubmit} className="space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div className="md:col-span-2 space-y-2">
+                      <label className="text-[10px] font-black uppercase text-gray-400 ml-2">
+                        Package Title
+                      </label>
+                      <input
+                        type="text"
+                        name="title"
+                        value={tourFormData.title}
+                        onChange={handleTourInputChange}
+                        placeholder="e.g. Serengeti Luxury Escape"
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-primary font-bold"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase text-gray-400 ml-2">
+                        Location
+                      </label>
+                      <input
+                        type="text"
+                        name="location"
+                        value={tourFormData.location}
+                        onChange={handleTourInputChange}
+                        placeholder="e.g. Tanzania"
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-primary font-bold"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase text-gray-400 ml-2">
+                        Price ($)
+                      </label>
+                      <input
+                        type="number"
+                        name="price"
+                        value={tourFormData.price}
+                        onChange={handleTourInputChange}
+                        placeholder="0.00"
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-primary font-black text-primary"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase text-gray-400 ml-2">
+                        Adventure Type
+                      </label>
+                      <select
+                        name="tourType"
+                        value={tourFormData.tourType}
+                        onChange={handleTourInputChange}
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-primary font-bold"
+                      >
+                        {taxonomies
+                          .filter((t) => t.type === "tourType")
+                          .map((ext) => (
+                            <option key={ext._id} value={ext.name}>
+                              {ext.name}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase text-gray-400 ml-2">
+                        Style Category
+                      </label>
+                      <select
+                        name="category"
+                        value={tourFormData.category}
+                        onChange={handleTourInputChange}
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-primary font-bold"
+                      >
+                        {taxonomies
+                          .filter((t) => t.type === "tourCategory")
+                          .map((ext) => (
+                            <option key={ext._id} value={ext.name}>
+                              {ext.name}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase text-gray-400 ml-2">
+                        Duration
+                      </label>
+                      <input
+                        type="text"
+                        name="duration"
+                        value={tourFormData.duration}
+                        onChange={handleTourInputChange}
+                        placeholder="e.g. 5 Days"
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-primary"
+                      />
+                    </div>
+                    <ImageUpload
+                      label="Image"
+                      value={tourFormData.image}
+                      onChange={(v) =>
+                        setTourFormData({ ...tourFormData, image: v })
+                      }
+                      required
+                      placeholder="Or paste an image URL"
+                    />
+                  </div>
+
+                  <div className="glass-card bg-primary/5 p-8 rounded-2xl border-none">
+                    <div className="flex items-center gap-4 mb-6">
+                      <input
+                        type="checkbox"
+                        id="isGroupTour"
+                        name="isGroupTour"
+                        checked={tourFormData.isGroupTour}
+                        onChange={(e) =>
+                          setTourFormData({
+                            ...tourFormData,
+                            isGroupTour: e.target.checked,
+                          })
+                        }
+                        className="w-6 h-6 rounded accent-primary cursor-pointer"
+                      />
+                      <label
+                        htmlFor="isGroupTour"
+                        className="font-black text-gray-900 uppercase text-xs tracking-widest cursor-pointer"
+                      >
+                        Enable as Group Tour Package
+                      </label>
+                    </div>
+
+                    {tourFormData.isGroupTour && (
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-slide-up">
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-black uppercase text-gray-400 ml-1">
+                            Max Capacity
+                          </label>
+                          <input
+                            type="number"
+                            name="maxCapacity"
+                            value={tourFormData.maxCapacity}
+                            onChange={handleTourInputChange}
+                            className="w-full bg-white p-4 rounded-xl border-none shadow-sm focus:ring-2 focus:ring-primary font-bold"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-black uppercase text-gray-400 ml-1">
+                            Pre-booked
+                          </label>
+                          <input
+                            type="number"
+                            name="currentBookings"
+                            value={tourFormData.currentBookings}
+                            onChange={handleTourInputChange}
+                            className="w-full bg-white p-4 rounded-xl border-none shadow-sm focus:ring-2 focus:ring-primary font-bold"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-black uppercase text-gray-400 ml-1">
+                            Launch Date
+                          </label>
+                          <input
+                            type="date"
+                            name="launchDate"
+                            value={
+                              tourFormData.launchDate
+                                ? tourFormData.launchDate.split("T")[0]
+                                : ""
+                            }
+                            onChange={handleTourInputChange}
+                            className="w-full bg-white p-4 rounded-xl border-none shadow-sm focus:ring-2 focus:ring-primary font-bold"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase text-gray-400 ml-2">
+                      Description
+                    </label>
+                    <textarea
+                      name="description"
+                      value={tourFormData.description}
+                      onChange={handleTourInputChange}
+                      placeholder="Tell a cinematic story about this tour..."
+                      className="w-full bg-gray-50 p-6 rounded-2xl border-none focus:ring-2 focus:ring-primary h-40 font-medium leading-relaxed"
+                      required
+                    ></textarea>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-xs font-black uppercase text-gray-400 ml-2">
+                        Inclusions (One per line)
+                      </label>
+                      <textarea
+                        name="inclusions"
+                        value={tourFormData.inclusions}
+                        onChange={handleTourInputChange}
+                        placeholder="Example:&#10;Professional Guide&#10;Park Fees&#10;Meals"
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none h-40 outline-none focus:ring-2 focus:ring-primary font-medium"
+                      ></textarea>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-black uppercase text-gray-400 ml-2">
+                        Exclusions (One per line)
+                      </label>
+                      <textarea
+                        name="exclusions"
+                        value={tourFormData.exclusions}
+                        onChange={handleTourInputChange}
+                        placeholder="Example:&#10;International Flights&#10;Tips&#10;Personal Items"
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none h-40 outline-none focus:ring-2 focus:ring-primary font-medium"
+                      ></textarea>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <label className="text-sm font-black uppercase text-gray-900">
+                        Itinerary Days
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setTourFormData({
+                            ...tourFormData,
+                            itinerary: [
+                              ...tourFormData.itinerary,
+                              {
+                                day: tourFormData.itinerary.length + 1,
+                                events: "",
+                              },
+                            ],
+                          })
+                        }
+                        className="text-primary font-black text-xs uppercase hover:underline"
+                      >
+                        + Add Day
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {tourFormData.itinerary.map((item, index) => (
+                        <div
+                          key={index}
+                          className="bg-gray-50 p-4 rounded-xl border-none space-y-2"
+                        >
+                          <div className="flex justify-between items-center">
+                            <span className="font-black text-xs text-primary">
+                              Day {item.day}
+                            </span>
+                            {index > 0 && (
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setTourFormData({
+                                    ...tourFormData,
+                                    itinerary: tourFormData.itinerary.filter(
+                                      (_, i) => i !== index,
+                                    ),
+                                  })
+                                }
+                                className="text-red-400 text-[10px] font-black uppercase"
+                              >
+                                Remove
+                              </button>
+                            )}
+                          </div>
+                          <textarea
+                            placeholder="Events for this day (One per line)"
+                            value={item.events}
+                            className="w-full bg-white p-3 rounded-lg border-none text-sm outline-none focus:ring-2 focus:ring-primary h-24"
+                            onChange={(e) => {
+                              const newItinerary = [...tourFormData.itinerary];
+                              newItinerary[index].events = e.target.value;
+                              setTourFormData({
+                                ...tourFormData,
+                                itinerary: newItinerary,
+                              });
+                            }}
+                          ></textarea>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end gap-4">
+                    {editingTourId && (
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setEditingTourId(null);
+                          setTourFormData({
+                            ...tourFormData,
+                            title: "",
+                            description: "",
+                          });
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    )}
+                    <Button type="submit" disabled={loading} className="px-12">
+                      {editingTourId ? "Confirm Update" : "Launch Package"}
+                    </Button>
+                  </div>
+                </form>
+              </Card>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {tours.map((t) => (
+                  <Card
+                    key={t._id}
+                    className="group relative overflow-hidden flex flex-col h-full border-none shadow-lg hover:shadow-2xl"
+                  >
+                    <div className="h-48 overflow-hidden relative">
+                      <img
+                        src={t.image}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      <div className="absolute top-4 right-4 flex gap-2">
+                        <button
+                          onClick={() => {
+                            setEditingTourId(t._id);
+                            setTourFormData({
+                              ...t,
+                              inclusions: t.inclusions?.join("\n"),
+                              exclusions: t.exclusions?.join("\n"),
+                              itinerary:
+                                t.itinerary?.map((i) => ({
+                                  day: i.day,
+                                  events: i.events.join("\n"),
+                                })) || [],
+                            });
+                            window.scrollTo(0, 0);
+                          }}
+                          className="p-2 bg-white/90 backdrop-blur-sm rounded-lg text-blue-600 hover:bg-blue-600 hover:text-white transition shadow-sm"
+                        >
+                          <span className="text-xs font-black uppercase tracking-widest">
+                            Edit
+                          </span>
+                        </button>
+                        <button
+                          onClick={() => deleteTour(t._id).then(loadTours)}
+                          className="p-2 bg-white/90 backdrop-blur-sm rounded-lg text-red-600 hover:bg-red-600 hover:text-white transition shadow-sm"
+                        >
+                          <span className="text-xs font-black uppercase tracking-widest">
+                            Delete
+                          </span>
+                        </button>
+                      </div>
+                      <div className="absolute bottom-4 left-4">
+                        <Badge variant="luxury">{t.category}</Badge>
+                      </div>
+                    </div>
+                    <div className="p-6 flex-1 flex flex-col justify-between">
+                      <div>
+                        <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-1">
+                          {t.tourType}
+                        </p>
+                        <h4 className="font-black text-xl text-gray-900 mb-2 leading-tight">
+                          {t.title}
+                        </h4>
+                        <p className="text-gray-500 text-sm line-clamp-2">
+                          {t.description}
+                        </p>
+                      </div>
+                      <div className="mt-6 pt-6 border-t flex justify-between items-center">
+                        <p className="font-black text-2xl text-primary">
+                          ${t.price}
+                        </p>
+                        <p className="text-xs font-bold text-gray-400">
+                          {t.duration}
+                        </p>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Blogs Section */}
+          {activeTab === "blogs" && (
+            <div className="animate-fade-in">
+              <div className="flex justify-between items-center mb-10">
+                <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">
+                  Content Hub
+                </h2>
+                <Button
+                  onClick={async () => {
+                    setLoading(true);
+                    try {
+                      await generateAiBlog();
+                      alert("AI is writing a new blog post...");
+                      loadBlogs();
+                    } catch (e) {
+                      alert("AI Generation failed.");
+                    } finally {
+                      setLoading(false);
+                    }
+                  }}
+                  className="bg-primary/10 text-primary border border-primary/20 hover:bg-primary hover:text-white"
+                >
+                  🤖 AI Generator
+                </Button>
+              </div>
+
+              <Card className="p-8 mb-12 border-none shadow-xl">
+                <h3 className="text-xl font-bold mb-8 flex items-center gap-2">
+                  <span className="w-2 h-8 bg-secondary rounded-full" />
+                  {editingBlogId ? "Refine Story" : "Compose New Story"}
+                </h3>
+                <form onSubmit={handleBlogSubmit} className="space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div className="md:col-span-3 space-y-2">
+                      <label className="text-[10px] font-black uppercase text-gray-400 ml-2">
+                        Story Title
+                      </label>
+                      <input
+                        type="text"
+                        name="title"
+                        value={blogFormData.title}
+                        onChange={handleBlogInputChange}
+                        placeholder="A cinematic title..."
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-secondary font-bold"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase text-gray-400 ml-2">
+                        Category
+                      </label>
+                      <select
+                        name="category"
+                        value={blogFormData.category}
+                        onChange={handleBlogInputChange}
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-secondary font-bold uppercase text-xs"
+                      >
+                        {taxonomies
+                          .filter((t) => t.type === "blogCategory")
+                          .map((ext) => (
+                            <option key={ext._id} value={ext.name}>
+                              {ext.name}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  </div>
+                  <ImageUpload
+                    label="Cover Image"
+                    value={blogFormData.image}
+                    onChange={(v) =>
+                      setBlogFormData({ ...blogFormData, image: v })
+                    }
+                    required
+                    placeholder="Or paste an image URL"
+                  />
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase text-gray-400 ml-2">
+                      Story Content
+                    </label>
+                    <textarea
+                      name="content"
+                      value={blogFormData.content}
+                      onChange={handleBlogInputChange}
+                      placeholder="Write your epic travel story here..."
+                      className="w-full bg-gray-50 p-6 rounded-2xl border-none focus:ring-2 focus:ring-secondary h-64 font-medium leading-relaxed"
+                      required
+                    ></textarea>
+                  </div>
+                  <div className="flex justify-end gap-4">
+                    {editingBlogId && (
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setEditingBlogId(null);
+                          setBlogFormData({ title: "", content: "" });
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    )}
+                    <Button
+                      type="submit"
+                      variant="secondary"
+                      disabled={loading}
+                      className="px-12"
+                    >
+                      {editingBlogId ? "Save Changes" : "Publish Story"}
+                    </Button>
+                  </div>
+                </form>
+              </Card>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {blogs.map((b) => (
+                  <Card
+                    key={b._id}
+                    className="group relative overflow-hidden flex flex-col md:flex-row h-64 border-none shadow-lg hover:shadow-2xl"
+                  >
+                    <div className="w-full md:w-48 h-full overflow-hidden shrink-0">
+                      <img
+                        src={b.image}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    </div>
+                    <div className="p-8 flex-1 flex flex-col justify-between">
+                      <div>
+                        <div className="flex justify-between items-start mb-2">
+                          <Badge variant="secondary">{b.category}</Badge>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => {
+                                setEditingBlogId(b._id);
+                                setBlogFormData(b);
+                                window.scrollTo(0, 0);
+                              }}
+                              className="text-blue-500 hover:text-blue-700 transition font-black text-[10px] uppercase"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => deleteBlog(b._id).then(loadBlogs)}
+                              className="text-red-500 hover:text-red-700 transition font-black text-[10px] uppercase"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                        <h4 className="font-black text-xl text-gray-900 leading-tight mb-4 line-clamp-2">
+                          {b.title}
+                        </h4>
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-400 text-[10px] font-black tracking-widest uppercase italic">
+                        <span>Published by {b.author || "Admin"}</span>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Bookings Section */}
+          {activeTab === "bookings" && (
+            <div className="animate-fade-in">
+              <div className="flex justify-between items-center mb-10">
+                <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">
+                  Reservations
+                </h2>
+                <Badge variant="accent">{bookings.length} New Bookings</Badge>
+              </div>
+              <div className="grid grid-cols-1 gap-6">
+                {bookings.map((b) => (
+                  <Card
+                    key={b._id}
+                    className="p-8 border-none shadow-md hover:shadow-xl flex flex-col md:flex-row justify-between items-center gap-8"
+                  >
+                    <div className="flex items-center gap-6">
+                      <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary text-2xl font-black">
+                        {b.name.charAt(0)}
+                      </div>
+                      <div>
+                        <h4 className="font-black text-xl text-gray-900">
+                          {b.name}
+                        </h4>
+                        <p className="text-gray-500 font-bold mb-1">{b.email}</p>
+                        <div className="flex gap-4">
+                          <Badge variant="primary" className="text-[10px]">
+                            {b.packageTour || b.tourTitle}
+                          </Badge>
+                          <span className="text-[10px] font-black uppercase text-gray-400">
+                            Date:{" "}
+                            {new Date(
+                              b.bookingDate || b.createdAt,
+                            ).toLocaleDateString()}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end gap-2">
+                      <p className="text-2xl font-black text-gray-900">
+                        ${b.totalPrice}
+                      </p>
+                      <select
+                        value={b.status || "Pending"}
+                        onChange={(e) =>
+                          updateBookingStatus(b._id, e.target.value).then(
+                            loadBookings,
+                          )
+                        }
+                        className="bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5 text-[10px] font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-primary"
+                      >
+                        <option value="Pending">Pending</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </select>
+                      <button
+                        onClick={() => deleteBooking(b._id).then(loadBookings)}
+                        className="text-[10px] text-red-500 font-black uppercase hover:underline"
+                      >
+                        Clear Record
+                      </button>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Inquiries Section */}
+          {activeTab === "inquiries" && (
+            <div className="animate-fade-in relative">
+              <div className="flex justify-between items-center mb-10">
+                <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">
+                  Client Inquiries
+                </h2>
+                <Badge variant="secondary">{inquiries.length} Messages</Badge>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {inquiries.map((i) => (
+                  <Card key={i._id} className="p-6 border-none shadow-lg hover:shadow-xl transition-all group flex flex-col justify-between h-72">
+                    <div>
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary font-black text-lg uppercase">
+                          {i.name.charAt(0)}
+                        </div>
+                        <div className="flex flex-col items-end gap-1">
+                          <Badge variant="primary" className="text-[8px]">Inquiry</Badge>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteInquiry(i._id).then(loadInquiries);
+                            }}
+                            className="text-[9px] text-red-400 opacity-0 group-hover:opacity-100 transition uppercase font-black hover:text-red-600"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                      <h4 className="font-black text-lg text-gray-900 truncate">
+                        {i.name}
+                      </h4>
+                      <p className="text-primary font-bold text-xs truncate mb-4">
+                        {i.email}
+                      </p>
+                      <div className="bg-gray-50/50 p-4 rounded-xl mb-4 border border-gray-100">
+                        <p className="text-gray-600 text-sm italic line-clamp-2 leading-relaxed">
+                          &ldquo;{i.message}&rdquo;
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center mt-auto">
+                      <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                        {new Date(i.createdAt).toLocaleDateString()}
+                      </span>
+                      <Button
+                        variant="outline"
+                        className="py-1.5 px-4 text-[10px] rounded-lg border-primary/30"
+                        onClick={() => setSelectedInquiry(i)}
+                      >
+                        View Full Detail
+                      </Button>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+
+              {/* Inquiry Detail Modal Overlay */}
+              {selectedInquiry && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden relative"
+                  >
+                    <button
+                      onClick={() => setSelectedInquiry(null)}
+                      className="absolute top-6 right-6 w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-900 transition-colors z-10"
+                    >
+                      <span className="text-2xl">&times;</span>
+                    </button>
+
+                    <div className="p-8 md:p-12">
+                      <Badge variant="primary" className="mb-4">Message Details</Badge>
+                      <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tighter mb-8 italic">
+                        Inquiry from <span className="text-primary">{selectedInquiry.name}</span>
+                      </h2>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8 pb-8 border-b border-slate-100">
+                        <div className="space-y-4">
+                          <div>
+                            <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">Email Address</p>
+                            <p className="font-bold text-slate-900 break-all">{selectedInquiry.email}</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">Phone Number</p>
+                            <p className="font-bold text-slate-900 break-words">{selectedInquiry.phone || "Not provided"}</p>
+                          </div>
+                        </div>
+                        <div className="space-y-4">
+                          <div>
+                            <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">Destinations</p>
+                            <p className="font-bold text-slate-900 break-words">{selectedInquiry.destinations || "General Interest"}</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">Travel Duration</p>
+                            <p className="font-bold text-slate-900 break-words">{selectedInquiry.duration || "TBD"}</p>
+                          </div>
+                        </div>
+                        <div className="space-y-4">
+                          <div>
+                            <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">Budget</p>
+                            <p className="font-bold text-primary break-words">${selectedInquiry.budget || "N/A"}</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">Status</p>
+                            <Badge variant="secondary" className="mt-1">{selectedInquiry.status}</Badge>
+                          </div>
+                        </div>
+                      </div>
+
+                      {selectedInquiry.services && selectedInquiry.services.length > 0 && (
+                        <div className="mb-8">
+                          <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-3">Requested Services</p>
+                          <div className="flex flex-wrap gap-2">
+                            {selectedInquiry.services.map((s, idx) => (
+                              <Badge key={idx} variant="secondary" className="bg-slate-100 text-slate-600 border-none font-bold">
+                                {s}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="mb-8 p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                        <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-3">Custom Requirements</p>
+                        <p className="text-slate-600 italic leading-relaxed whitespace-pre-wrap">
+                          &ldquo;{selectedInquiry.message}&rdquo;
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col md:flex-row gap-4">
+                        <Button
+                          variant="primary"
+                          className="flex-1 rounded-2xl"
+                          onClick={() => window.location.href = `mailto:${selectedInquiry.email}`}
+                        >
+                          Send Official Reply
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="flex-1 rounded-2xl border-slate-200 text-slate-600"
+                          onClick={() => setSelectedInquiry(null)}
+                        >
+                          Close Preview
+                        </Button>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Gallery Section */}
+          {activeTab === "gallery" && (
+            <div className="animate-fade-in">
+              <div className="flex justify-between items-center mb-10">
+                <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">
+                  Visual Gallery
+                </h2>
+                <Badge variant="luxury">{gallery.length} High-Res Assets</Badge>
+              </div>
+
+              <Card className="p-8 mb-12 border-none shadow-xl">
+                <h3 className="text-xl font-bold mb-8">Add New Asset</h3>
+                <form onSubmit={handleGallerySubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <input
+                      type="text"
+                      name="location"
+                      value={galleryFormData.location}
+                      onChange={handleGalleryInputChange}
+                      placeholder="Location"
+                      className="bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-primary font-bold"
+                      required
+                    />
+                    <input
+                      type="text"
+                      name="caption"
+                      value={galleryFormData.caption}
+                      onChange={handleGalleryInputChange}
+                      placeholder="Caption"
+                      className="bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-primary font-bold md:col-span-2"
+                      required
+                    />
+                  </div>
+                  <div className="flex gap-4 items-start">
+                    <div className="flex-1">
+                      <ImageUpload
+                        label="Image"
+                        value={galleryFormData.img}
+                        onChange={(v) =>
+                          setGalleryFormData({ ...galleryFormData, img: v })
+                        }
+                        required
+                        placeholder="Or paste an image URL"
+                      />
+                    </div>
+                    <Button type="submit" disabled={loading} className="px-10">
+                      Upload Asset
+                    </Button>
+                  </div>
+                </form>
+              </Card>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {gallery.map((g) => (
+                  <div
+                    key={g._id}
+                    className="group relative aspect-square rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500"
+                  >
+                    <img
+                      src={g.img}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-125"
+                    />
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-center items-center p-4 text-center">
+                      <p className="text-white font-black text-xs uppercase mb-1">
+                        {g.location}
+                      </p>
+                      <p className="text-white/70 text-[10px] mb-4">
+                        {g.caption}
+                      </p>
+                      <button
+                        onClick={() => deleteGallery(g._id).then(loadGallery)}
+                        className="bg-red-500 text-white p-2 rounded-lg text-[10px] font-black uppercase"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Filters Section */}
+          {activeTab === "filters" && (
+            <div className="animate-fade-in">
+              <div className="flex justify-between items-center mb-10">
+                <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">
+                  Taxonomy & Filters
+                </h2>
+                <Badge variant="primary">{taxonomies.length} Dynamic Tags</Badge>
+              </div>
+
+              <Card className="p-8 mb-12 border-none shadow-xl">
+                <h3 className="text-xl font-bold mb-8 italic">
+                  New Classification
+                </h3>
+                <form
+                  onSubmit={handleTaxSubmit}
+                  className="flex flex-col md:flex-row gap-6"
+                >
+                  <input
+                    type="text"
+                    name="name"
+                    value={taxFormData.name}
+                    onChange={(e) =>
+                      setTaxFormData({ ...taxFormData, name: e.target.value })
+                    }
+                    placeholder="Filter Name (e.g. Eco-Luxury)"
+                    className="flex-1 bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-primary font-bold"
+                    required
+                  />
+                  <select
+                    name="type"
+                    value={taxFormData.type}
+                    onChange={(e) =>
+                      setTaxFormData({ ...taxFormData, type: e.target.value })
+                    }
+                    className="bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-primary font-black uppercase text-xs"
+                  >
+                    <option value="tourType">Adventure Type</option>
+                    <option value="tourCategory">Tour Category</option>
+                    <option value="blogCategory">Blog Category</option>
+                  </select>
+                  <Button type="submit" disabled={loading} className="px-10">
+                    Create Filter
+                  </Button>
+                </form>
+              </Card>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {["tourType", "tourCategory", "blogCategory"].map((type) => (
+                  <Card key={type} className="p-6 border-none shadow-md bg-white">
+                    <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-6 border-b pb-2">
+                      {type === "tourType"
+                        ? "Adventure Types"
+                        : type === "tourCategory"
+                          ? "Tour Categories"
+                          : "Blog Categories"}
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {taxonomies
+                        .filter((t) => t.type === type)
+                        .map((tax) => (
+                          <div
+                            key={tax._id}
+                            className="flex items-center gap-2 bg-gray-50 pl-4 pr-2 py-2 rounded-full border border-gray-100 group hover:border-red-200 transition"
+                          >
+                            <span className="text-xs font-bold text-gray-700">
+                              {tax.name}
+                            </span>
+                            <button
+                              onClick={() =>
+                                deleteTaxonomy(tax._id).then(loadTaxonomies)
+                              }
+                              className="w-5 h-5 rounded-full bg-gray-200 text-gray-400 group-hover:bg-red-500 group-hover:text-white flex items-center justify-center text-[10px]"
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))}
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Visionaries Section */}
+          {activeTab === "visionaries" && (
+            <div className="animate-fade-in">
+              <div className="flex justify-between items-center mb-10">
+                <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">
+                  Team Visionaries
+                </h2>
+                <Badge variant="primary">{visionaries.length} Team Members</Badge>
+              </div>
+
+              <Card className="p-8 mb-12 border-none shadow-xl">
+                <h3 className="text-xl font-bold mb-8 italic">
+                  {editingVisionaryId ? "Update Member" : "Add New Visionary"}
+                </h3>
+                <form onSubmit={handleVisionarySubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase text-gray-400 ml-2">Member Name</label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={visionaryFormData.name}
+                        onChange={handleVisionaryInputChange}
+                        placeholder="e.g. John Doe"
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-primary font-bold"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase text-gray-400 ml-2">Role / Duty</label>
+                      <input
+                        type="text"
+                        name="duty"
+                        value={visionaryFormData.duty}
+                        onChange={handleVisionaryInputChange}
+                        placeholder="e.g. CEO & Founder"
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-primary font-bold"
+                        required
+                      />
+                    </div>
+                    <ImageUpload
+                      label="Image"
+                      value={visionaryFormData.image}
+                      onChange={(v) =>
+                        setVisionaryFormData({ ...visionaryFormData, image: v })
+                      }
+                      required
+                      placeholder="Or paste an image URL"
+                    />
+                  </div>
+                  <div className="flex gap-4">
+                    <Button type="submit" disabled={loading} className="px-10">
+                      {editingVisionaryId ? "Update Member" : "Add to Team"}
+                    </Button>
+                    {editingVisionaryId && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingVisionaryId(null);
+                          setVisionaryFormData({ name: "", duty: "", image: "" });
+                        }}
+                        className="text-gray-400 font-bold hover:text-gray-600"
+                      >
+                        Cancel Edit
+                      </button>
+                    )}
+                  </div>
+                </form>
+              </Card>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {visionaries.map((v) => (
+                  <Card key={v._id} className="p-6 border-none shadow-lg bg-white group flex items-center gap-6">
+                    <div className="relative">
+                      <img
+                        src={v.image}
+                        alt={v.name}
+                        className="w-20 h-20 rounded-full object-cover border-2 border-white shadow-md group-hover:scale-105 transition-transform"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-lg font-black text-gray-900 leading-tight uppercase tracking-tight mb-1">
+                        {v.name}
+                      </h4>
+                      <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-4">
+                        {v.duty}
+                      </p>
+                      <div className="flex gap-4">
+                        <button
+                          onClick={() => handleEditVisionary(v)}
+                          className="text-primary font-black text-[10px] uppercase hover:underline"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteVisionary(v._id)}
+                          className="text-red-500 font-black text-[10px] uppercase hover:underline"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Destinations Section */}
+          {activeTab === "destinations" && (
+            <div className="animate-fade-in">
+              <div className="flex justify-between items-center mb-10">
+                <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">
+                  Destinations
+                </h2>
+                <Badge variant="primary">{destinations.length} Destinations</Badge>
+              </div>
+
+              <Card className="p-8 mb-12 border-none shadow-xl">
+                <h3 className="text-xl font-bold mb-8 flex items-center gap-2">
+                  <span className="w-2 h-8 bg-primary rounded-full" />
+                  {editingDestinationId
+                    ? "Update Destination"
+                    : "Add New Destination"}
+                </h3>
+                <form onSubmit={handleDestinationSubmit} className="space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase text-gray-400 ml-2">Name</label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={destinationFormData.name}
+                        onChange={handleDestinationInputChange}
+                        placeholder="e.g. Serengeti National Park"
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-primary font-bold"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase text-gray-400 ml-2">Slug</label>
+                      <input
+                        type="text"
+                        name="slug"
+                        value={destinationFormData.slug}
+                        onChange={handleDestinationInputChange}
+                        placeholder="e.g. serengeti"
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-primary font-bold"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase text-gray-400 ml-2">Location</label>
+                      <input
+                        type="text"
+                        name="location"
+                        value={destinationFormData.location}
+                        onChange={handleDestinationInputChange}
+                        placeholder="e.g. Serengeti"
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-primary font-bold"
+                      />
+                    </div>
+                    <ImageUpload
+                      label="Hero Image"
+                      value={destinationFormData.heroImage}
+                      onChange={(v) =>
+                        setDestinationFormData({
+                          ...destinationFormData,
+                          heroImage: v,
+                        })
+                      }
+                      required
+                      placeholder="Or paste an image URL"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase text-gray-400 ml-2">Short Intro</label>
+                      <input
+                        type="text"
+                        name="shortIntro"
+                        value={destinationFormData.shortIntro}
+                        onChange={handleDestinationInputChange}
+                        placeholder="One-line hook shown on cards"
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-primary font-medium"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase text-gray-400 ml-2">Best Time to Visit</label>
+                      <input
+                        type="text"
+                        name="bestTimeToVisit"
+                        value={destinationFormData.bestTimeToVisit}
+                        onChange={handleDestinationInputChange}
+                        placeholder="e.g. June to October"
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-primary font-medium"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase text-gray-400 ml-2">Description</label>
+                    <textarea
+                      name="description"
+                      value={destinationFormData.description}
+                      onChange={handleDestinationInputChange}
+                      placeholder="Full destination story..."
+                      className="w-full bg-gray-50 p-6 rounded-2xl border-none focus:ring-2 focus:ring-primary h-40 font-medium leading-relaxed"
+                      required
+                    ></textarea>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-xs font-black uppercase text-gray-400 ml-2">Highlights (One per line)</label>
+                      <textarea
+                        name="highlights"
+                        value={destinationFormData.highlights}
+                        onChange={handleDestinationInputChange}
+                        placeholder="Example:&#10;Great Migration&#10;Big Five sightings"
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none h-32 outline-none focus:ring-2 focus:ring-primary font-medium"
+                      ></textarea>
+                    </div>
+                    <ImageUpload
+                      label="Gallery Images"
+                      value={destinationFormData.gallery}
+                      onChange={(v) =>
+                        setDestinationFormData({
+                          ...destinationFormData,
+                          gallery: v,
+                        })
+                      }
+                      multiple
+                      placeholder="Or paste image URLs, one per line"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-xs font-black uppercase text-gray-400 ml-2">Wildlife Calendar (Format: Month: Event, One per line)</label>
+                    <textarea
+                      name="wildlifeCalendar"
+                      value={destinationFormData.wildlifeCalendar}
+                      onChange={handleDestinationInputChange}
+                      placeholder="Example:&#10;Jan-Mar: Calving season in Ndutu&#10;Jun-Oct: River crossings"
+                      className="w-full bg-gray-50 p-4 rounded-xl border-none h-32 outline-none focus:ring-2 focus:ring-primary font-medium"
+                    ></textarea>
+                  </div>
+
+                  <div className="flex justify-end gap-4">
+                    {editingDestinationId && (
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setEditingDestinationId(null);
+                          setDestinationFormData({
+                            name: "",
+                            slug: "",
+                            heroImage: "",
+                            shortIntro: "",
+                            description: "",
+                            bestTimeToVisit: "",
+                            location: "",
+                            highlights: "",
+                            gallery: [],
+                            wildlifeCalendar: "",
+                          });
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    )}
+                    <Button type="submit" disabled={loading} className="px-12">
+                      {editingDestinationId ? "Confirm Update" : "Add Destination"}
+                    </Button>
+                  </div>
+                </form>
+              </Card>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {destinations.map((d) => (
+                  <Card key={d._id} className="group relative overflow-hidden border-none shadow-lg hover:shadow-2xl">
+                    <div className="h-48 overflow-hidden relative">
+                      <img
+                        src={d.heroImage}
+                        alt={d.name}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      <div className="absolute top-4 right-4 flex gap-2">
+                        <button
+                          onClick={() => {
+                            setEditingDestinationId(d._id);
+                            setDestinationFormData({
+                              name: d.name,
+                              slug: d.slug,
+                              heroImage: d.heroImage,
+                              shortIntro: d.shortIntro,
+                              description: d.description,
+                              bestTimeToVisit: d.bestTimeToVisit,
+                              location: d.location || "",
+                              highlights: (d.highlights || []).join("\n"),
+                              gallery: d.gallery || [],
+                              wildlifeCalendar: (d.wildlifeCalendar || [])
+                                .map((c) => `${c.month}: ${c.event}`)
+                                .join("\n"),
+                            });
+                            window.scrollTo(0, 0);
+                          }}
+                          className="p-2 bg-white/90 backdrop-blur-sm rounded-lg text-blue-600 hover:bg-blue-600 hover:text-white transition shadow-sm"
+                        >
+                          <span className="text-xs font-black uppercase tracking-widest">Edit</span>
+                        </button>
+                        <button
+                          onClick={() => deleteDestination(d._id).then(loadDestinations)}
+                          className="p-2 bg-white/90 backdrop-blur-sm rounded-lg text-red-600 hover:bg-red-600 hover:text-white transition shadow-sm"
+                        >
+                          <span className="text-xs font-black uppercase tracking-widest">Delete</span>
+                        </button>
+                      </div>
+                      <div className="absolute bottom-4 left-4">
+                        <Badge variant="secondary">{d.location || "Tanzania"}</Badge>
+                      </div>
+                    </div>
+                    <div className="p-6">
+                      <h4 className="font-black text-xl text-gray-900 mb-2 leading-tight">{d.name}</h4>
+                      <p className="text-gray-500 text-sm line-clamp-2">{d.shortIntro}</p>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Testimonials Section */}
+          {activeTab === "testimonials" && (
+            <div className="animate-fade-in">
+              <div className="flex justify-between items-center mb-10">
+                <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">
+                  Guest Testimonials
+                </h2>
+                <Badge variant="primary">{testimonials.length} Reviews</Badge>
+              </div>
+
+              <Card className="p-8 mb-12 border-none shadow-xl">
+                <h3 className="text-xl font-bold mb-8 flex items-center gap-2">
+                  <span className="w-2 h-8 bg-secondary rounded-full" />
+                  Add New Review
+                </h3>
+                <form onSubmit={handleTestimonialSubmit} className="space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase text-gray-400 ml-2">Guest Name</label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={testimonialFormData.name}
+                        onChange={handleTestimonialInputChange}
+                        placeholder="e.g. Sarah Thompson"
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-secondary font-bold"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase text-gray-400 ml-2">Role</label>
+                      <input
+                        type="text"
+                        name="role"
+                        value={testimonialFormData.role}
+                        onChange={handleTestimonialInputChange}
+                        placeholder="e.g. Wildlife Photographer"
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-secondary font-bold"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase text-gray-400 ml-2">Rating (1-5)</label>
+                      <input
+                        type="number"
+                        name="rating"
+                        min="1"
+                        max="5"
+                        value={testimonialFormData.rating}
+                        onChange={handleTestimonialInputChange}
+                        className="w-full bg-gray-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-secondary font-bold"
+                        required
+                      />
+                    </div>
+                    <ImageUpload
+                      label="Avatar"
+                      value={testimonialFormData.image}
+                      onChange={(v) =>
+                        setTestimonialFormData({ ...testimonialFormData, image: v })
+                      }
+                      placeholder="Or paste an image URL"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase text-gray-400 ml-2">Review Text</label>
+                    <textarea
+                      name="text"
+                      value={testimonialFormData.text}
+                      onChange={handleTestimonialInputChange}
+                      placeholder="Their experience in their own words..."
+                      className="w-full bg-gray-50 p-6 rounded-2xl border-none focus:ring-2 focus:ring-secondary h-32 font-medium leading-relaxed"
+                      required
+                    ></textarea>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <input
+                      type="checkbox"
+                      id="verified"
+                      name="verified"
+                      checked={testimonialFormData.verified}
+                      onChange={(e) =>
+                        setTestimonialFormData({
+                          ...testimonialFormData,
+                          verified: e.target.checked,
+                        })
+                      }
+                      className="w-6 h-6 rounded accent-primary cursor-pointer"
+                    />
+                    <label htmlFor="verified" className="font-black text-gray-900 uppercase text-xs tracking-widest cursor-pointer">
+                      Mark as Verified
+                    </label>
+                  </div>
+                  <div className="flex justify-end">
+                    <Button type="submit" disabled={loading} className="px-12">
+                      Add Review
+                    </Button>
+                  </div>
+                </form>
+              </Card>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {testimonials.map((t) => (
+                  <Card key={t._id} className="p-6 border-none shadow-lg hover:shadow-xl transition-all group">
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="flex gap-1 text-secondary mb-4">
+                        {Array.from({ length: t.rating || 5 }).map((_, i) => (
+                          <span key={i}>★</span>
+                        ))}
+                      </div>
+                      <button
+                        onClick={() => deleteTestimonial(t._id).then(loadTestimonials)}
+                        className="text-red-500 font-black text-[10px] uppercase hover:underline"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                    <p className="text-gray-600 text-sm leading-relaxed font-medium mb-6 italic">&ldquo;{t.text}&rdquo;</p>
+                    <div className="flex items-center gap-4">
+                      {t.image ? (
+                        <img src={t.image} alt={t.name} className="w-12 h-12 rounded-full object-cover ring-2 ring-primary/30" />
+                      ) : (
+                        <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center font-black ring-2 ring-primary/30">{t.name?.[0]}</div>
+                      )}
+                      <div>
+                        <p className="font-black text-gray-900 text-sm">{t.name}</p>
+                        <p className="text-primary font-bold text-xs uppercase tracking-wider">{t.role}</p>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Newsletter Section */}
+          {activeTab === "newsletter" && (
+            <div className="animate-fade-in">
+              <div className="flex justify-between items-center mb-10">
+                <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">
+                  Newsletter Subscribers
+                </h2>
+                <Badge variant="secondary">{newsletter.length} Subscribers</Badge>
+              </div>
+
+              {newsletter.length === 0 ? (
+                <p className="text-center text-gray-400 font-bold py-16">No subscribers yet.</p>
+              ) : (
+                <Card className="p-4 border-none shadow-lg overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left">
+                      <thead>
+                        <tr className="border-b border-gray-100 text-[10px] font-black uppercase tracking-widest text-gray-400">
+                          <th className="p-4">Email</th>
+                          <th className="p-4">Subscribed</th>
+                          <th className="p-4 text-right">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {newsletter.map((s) => (
+                          <tr key={s._id} className="border-b border-gray-50 hover:bg-gray-50/50 transition">
+                            <td className="p-4 font-bold text-gray-900">{s.email}</td>
+                            <td className="p-4 text-gray-500 text-sm">
+                              {new Date(s.createdAt).toLocaleDateString()}
+                            </td>
+                            <td className="p-4 text-right">
+                              <button
+                                onClick={() => deleteNewsletter(s._id).then(loadNewsletter)}
+                                className="text-red-500 font-black text-[10px] uppercase hover:underline"
+                              >
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </Card>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AdminDashboard;
