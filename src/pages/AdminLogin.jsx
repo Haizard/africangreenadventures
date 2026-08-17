@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginAdmin } from "../services/api";
+import LoginImage from "../img/IMG-20260817-WA0013.jpg";
 
 const AdminLogin = () => {
   const [credentials, setCredentials] = useState({
@@ -37,7 +38,7 @@ const AdminLogin = () => {
     <div className="min-h-screen flex bg-background">
       {/* Left Panel - Branding */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden items-end p-16">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?q=80&w=1920&auto=format&fit=crop')] bg-cover bg-center" />
+        <img src={LoginImage} alt="African safari" className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
         <div className="relative z-10 text-white">
           <p className="text-primary font-black uppercase tracking-[0.3em] text-xs mb-4">

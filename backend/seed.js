@@ -7,6 +7,9 @@ import Visionary from './models/Visionary.js';
 import Taxonomy from './models/Taxonomy.js';
 import Testimonial from './models/Testimonial.js';
 import Gallery from './models/Gallery.js';
+import Booking from './models/Booking.js';
+import CustomInquiry from './models/CustomInquiry.js';
+import Newsletter from './models/Newsletter.js';
 
 dotenv.config();
 
@@ -51,6 +54,21 @@ const galleries = [
   { img: "https://images.unsplash.com/photo-1516426122078-c23e76319801?q=80&w=800&auto=format&fit=crop", location: "Ngorongoro", caption: "Crater at dawn" },
   { img: "https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?q=80&w=800&auto=format&fit=crop", location: "Zanzibar", caption: "Nungwi beach" },
   { img: "https://images.unsplash.com/photo-1516357231954-91487b459002?q=80&w=800&auto=format&fit=crop", location: "Kilimanjaro", caption: "Kibo summit" },
+];
+
+const bookings = [
+  { bookingRef: 'AGA-DEMO-001', name: 'Amelia Grant', email: 'amelia@example.com', address: 'London, United Kingdom', phone: '+44 7700 900123', packageTour: 'Serengeti Big Five Safari', adults: 2, children: 0, travelDate: new Date('2026-09-15'), totalPrice: 3700, childDiscountPercent: 50, referralSource: 'Website', status: 'Confirmed' },
+  { bookingRef: 'AGA-DEMO-002', name: 'Noah Bennett', email: 'noah@example.com', address: 'Toronto, Canada', phone: '+1 416 555 0134', packageTour: 'Kilimanjaro Machame Trek', adults: 1, children: 0, travelDate: new Date('2026-10-07'), totalPrice: 2400, childDiscountPercent: 0, referralSource: 'Instagram', status: 'Pending' },
+];
+
+const inquiries = [
+  { name: 'Sofia Martins', email: 'sofia@example.com', phone: '+351 912 345 678', destinations: 'Serengeti and Zanzibar', duration: '8-10 days', budget: 'USD 4,000 - 6,000', services: ['Safari', 'Beach holiday', 'Airport transfers'], message: 'Looking for a private honeymoon itinerary in February.', status: 'Contacted' },
+  { name: 'Ethan Wilson', email: 'ethan@example.com', phone: '+1 202 555 0198', destinations: 'Kilimanjaro', duration: '7 days', budget: 'USD 2,000 - 3,000', services: ['Trekking', 'Accommodation'], message: 'Interested in the Machame route for a small group.', status: 'Pending' },
+];
+
+const subscribers = [
+  { email: 'traveler@example.com' },
+  { email: 'safari.news@example.com' },
 ];
 
 const seed = async () => {
@@ -103,6 +121,18 @@ const seed = async () => {
     for (const g of galleries) {
       const exists = await Gallery.findOne({ caption: g.caption });
       if (!exists) await Gallery.create(g);
+    }
+    for (const booking of bookings) {
+      const exists = await Booking.findOne({ bookingRef: booking.bookingRef });
+      if (!exists) await Booking.create(booking);
+    }
+    for (const inquiry of inquiries) {
+      const exists = await CustomInquiry.findOne({ email: inquiry.email });
+      if (!exists) await CustomInquiry.create(inquiry);
+    }
+    for (const subscriber of subscribers) {
+      const exists = await Newsletter.findOne({ email: subscriber.email });
+      if (!exists) await Newsletter.create(subscriber);
     }
 
     console.log('Seed complete');

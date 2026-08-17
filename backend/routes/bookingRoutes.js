@@ -42,7 +42,7 @@ router.post('/', bookingLimiter, async (req, res) => {
             await tour.save();
         }
 
-        const bookingRef = 'MK-' + Math.random().toString(36).slice(2, 8).toUpperCase();
+        const bookingRef = 'AGA-' + Math.random().toString(36).slice(2, 8).toUpperCase();
         const newBooking = new Booking({ ...bookingData, adults, children, referralSource, totalPrice, bookingRef, travelDate, childDiscountPercent: childDiscount });
         await newBooking.save();
 

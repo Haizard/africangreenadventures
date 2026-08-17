@@ -1,7 +1,6 @@
 import React from "react";
 import PlaceCard from "./PlaceCard";
 import { fetchGallery } from "../../services/api";
-import localGallery from "../../data/localGallery";
 
 const Places = () => {
   const [galleryData, setGalleryData] = React.useState([]);
@@ -40,14 +39,13 @@ const Places = () => {
                 title={item.caption}
               />
             ))
-          ) : localGallery.map((item) => (
-            <PlaceCard
-              key={item._id}
-              img={item.img}
-              location={item.location}
-              title={item.caption}
-            />
-          ))}
+          ) : (
+            <div className="col-span-full py-20 text-center">
+              <p className="text-gray-400 font-bold uppercase tracking-widest italic font-heading text-xl">
+                Capturing Tanzania&apos;s beauty...
+              </p>
+            </div>
+          )}
         </div>
       </section>
     </div>
