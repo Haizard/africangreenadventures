@@ -110,6 +110,10 @@ const seed = async () => {
       const exists = await Blog.findOne({ title: b.title });
       if (!exists) await Blog.create(b);
     }
+    await Blog.updateMany(
+      { author: 'Makolo AI Expert' },
+      { $set: { author: 'African Green AI Expert' } }
+    );
     for (const v of visionaries) {
       const exists = await Visionary.findOne({ name: v.name });
       if (!exists) await Visionary.create(v);
